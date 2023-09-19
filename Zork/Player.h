@@ -15,6 +15,7 @@ struct Player {
 	Player(string name, Room* room, map<string, Item*> items);
 	bool Go(string name, map<string, Room*> rooms);
 	bool Take(Item* item);
+	int Use(Item* item, Furniture* furniture);
 	string Drop(Item* item);
 	void Search(Furniture* furniture, map<string, Item*> items);
 	bool Checkitems(Furniture* furniture, map<string, Item*> items);

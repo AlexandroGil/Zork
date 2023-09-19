@@ -35,7 +35,6 @@ public:
     string question;
     vector<string> choices;
     vector<Dialog*> options;
-    //Dialog* options;
     Dialog(string val_question, vector<string> val_choices)
     {
         question = val_question;

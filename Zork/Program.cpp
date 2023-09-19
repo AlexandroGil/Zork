@@ -1,36 +1,43 @@
 #include "Program.h"
 
+/*
+* Constructor that creates all the game objects
+*/
 Program::Program() {
     status = false;
     m_done = false;
 
-    CreateRoom("MoreForest", "A Dark Forest with tall trees", "Null", "Null", "Null", "Null");
+    CreateRoom("MoreForest", "You dont want to go there", "Null", "Null", "Null", "Null");
     CreateRoom("Forest", "A Dark Forest with tall trees", "Porch", "Null", "Garden", "Null");
-    CreateRoom("Porch", "Small Porch of the  with one rocking chair", "LivingRoom", "Forest", "Null", "Null");
-    CreateRoom("LivingRoom", "Cozy  livinroom with an unlit fireplace and a big leather couch", "MainRoom", "Porch", "Garage", "Null");
-    CreateRoom("MainRoom", "The Main room with a bed, a nightstand and a wardrobe", "Null", "LivingRoom", "Null", "BathRoom");
-    CreateRoom("BathRoom", "Small Bathroom with a simple shower, sink, toilet and a trash can", "Null", "Null", "MainRoom", "Null");
-    CreateRoom("Garage", "Cozy  livinroom with an unlit fireplace and a big leather couche", "Null", "Garden", "Null", "LivingRoom");
-    CreateRoom("Garden", "Cozy  livinroom with an unlit fireplace and a big leather couche", "Garage", "Null", "Null", "Forest");
+    CreateRoom("Porch", "Small Porch of the Cabin with one rocking chair", "LivingRoom", "Forest", "Null", "Null");
+    CreateRoom("LivingRoom", "Cozy livinroom with a fireplace and a big leather couch", "MainRoom", "Porch", "Garage", "Null");
+    CreateRoom("MainRoom", "The beautiful Main room with a bed, a nightstand and a wardrobe", "Null", "LivingRoom", "Null", "BathRoom");
+    CreateRoom("BathRoom", "Small Bathroom with a simple shower, sink and a toilet", "Null", "Null", "MainRoom", "Null");
+    CreateRoom("Garage", "A big garage with a lot of tools and a big car, percfect to explore the forest", "Null", "Garden", "Null", "LivingRoom");
+    CreateRoom("Garden", "A beatiful garden with some tires trails in the middle", "Garage", "Null", "Null", "Forest");
 
-    CreateFurniture("Tree", "A big and confy leather couch", "Forest");
-    CreateFurniture("Chair", "A big and confy leather couch", "Porch");
-    CreateFurniture("Couch", "A big and confy leather couch", "LivingRoom");
-    CreateFurniture("Fireplace", "An old but really pretty fireplace, maybe you can light it", "LivingRoom");
-    CreateFurniture("Bed", "An old but really pretty fireplace, maybe you can light it", "MainRoom");
-    CreateFurniture("Nightstand", "An old but really pretty fireplace, maybe you can light it", "MainRoom");
-    CreateFurniture("Wardrobe", "An old but really pretty fireplace, maybe you can light it", "MainRoom");
-    CreateFurniture("Shower", "An old but really pretty fireplace, maybe you can light it", "BathRoom");
-    CreateFurniture("Sink", "An old but really pretty fireplace, maybe you can light it", "BathRoom");
-    CreateFurniture("Toilet", "An old but really pretty fireplace, maybe you can light it", "BathRoom");
-    CreateFurniture("Car", "An old but really pretty fireplace, maybe you can light it", "Garage");
+    vector <string> usages = {};
+    CreateFurniture("Tree", "A big beautiful pine", "Forest", usages);
+    CreateFurniture("Chair", "A simple and old rocking chair", "Porch", usages);
+    CreateFurniture("Couch", "A big and confy leather couch", "LivingRoom", usages);
+    CreateFurniture("Fireplace", "An old but really pretty fireplace", "LivingRoom", usages);
+    CreateFurniture("Bed", "A giant bed", "MainRoom", usages);
+    usages = { "Lighter" };
+    CreateFurniture("Nightstand", "Old Nightstand, looks like it was made by hand", "MainRoom", usages);
+    CreateFurniture("Wardrobe", "Another furniture that was made by hand", "MainRoom", usages);
+    usages.clear();
+    CreateFurniture("Shower", "Simple old rusty shower", "BathRoom", usages);
+    CreateFurniture("Sink", "Simple sink", "BathRoom", usages);
+    CreateFurniture("Toilet", "Simple Toilet", "BathRoom", usages);
+    usages = { "Keys" };
+    CreateFurniture("Car", "An old but big and powerful truck", "Garage", usages);
 
-    CreateItem("keys", "Looks like some old car keys", "Sink");
-    CreateItem("axe", "Looks like some old car keys", "Garage");
-    CreateItem("wood", "Looks like some old car keys", "Tree");
-    CreateItem("lighter", "Looks like some old car keys", "Nightstand");
-    CreateItem("picture", "Looks like some old car keys", "Couch");
-    CreateItem("ring", "Looks like some old car keys", "Fireplace");
+    CreateItem("Keys", "Looks like some old car keys", "Sink");
+    CreateItem("Axe", "A pretty used axe", "Garage");
+    CreateItem("Wood", "Some leftover wood sticks", "Tree");
+    CreateItem("Lighter", "A simple lighter", "Nightstand");
+    CreateItem("Picture", "A pretty old photo of a couple", "Couch");
+    CreateItem("Ring", "Looks like a weeding ring", "Fireplace");
 
     game_state = 0;
     farmer_home = false;
@@ -42,14 +49,17 @@ Program::Program() {
 }
 
 Program::~Program() {
-
 }
 
-
+/*
+* Main Run Class
+*/
 void Program::Run()
 {
     cout << "Lost in the Forest" << endl;
-    cout << "You and your partner are lost in a scary forest late at night, but with your compass heading north you can see a small cavin at the distance and you both decide to approach the cavin" << endl;
+    cout << "You are lost in a scary forest late at night, but with your \ncompass heading north you can see a small cavin at the \ndistance and you decide to approach the cavin\n" << endl;
+    cout << player->current_room->name << endl;
+    cout << player->current_room->description << endl;
     while (!m_done)
     {
         cout << "\n>";
@@ -57,9 +67,12 @@ void Program::Run()
         status = HandleUserInput(command);
     }
 
-    cout << endl << "The end." << endl;
+    cout << endl << "THE END!" << endl;
 }
 
+/*
+* Simple "Timer"to move the farmer
+*/
 void Program::Timer()
 {
     if (!farmer->fake_ending) {
@@ -67,7 +80,7 @@ void Program::Timer()
             int val = steps * 5;
             probability = rand() % 100;
             if (probability < val) {
-                cout << "You hear some footsteps at the distance" << endl;
+                cout << "\nYou hear some footsteps at the distance" << endl;
                 Room* current_farmer_room = rooms.find("Forest")->second;
                 farmer->Home(current_farmer_room);
                 farmer_home = true;
@@ -90,9 +103,8 @@ void Program::Timer()
             }
             farmer->Move(posible_rooms);
         }
-        cout << "Your Room is: " << player->current_room->name << " Farmer current Room is: " << farmer->current_farmer_room->name << endl;
         if ((farmer->current_farmer_room == player->current_room) && !farmer_encounter) {
-            cout << "You see an old man with dirty clothes and with a gun pointing at you!" << endl;
+            cout << "\nYou see an old man with dirty clothes and with a gun pointing at you!" << endl;
             farmer_encounter = true;
             farmer->CreateDialog(player);
             if (player->current_room->name == "Forest" || player->current_room->name == "Garden" || player->current_room->name == "Porch") {
@@ -118,23 +130,41 @@ void Program::CreateItem(string name, string description, string location)
     items.insert({ StringUtil::ToLower(name), item });
 }
 
-void Program::CreateFurniture(string name, string description, string location)
+void Program::CreateFurniture(string name, string description, string location, vector <string> usages)
 {
-    Furniture* furniture = new Furniture(name, description, location);
+    Furniture* furniture = new Furniture(name, description, location, usages);
     furnitures.insert({ StringUtil::ToLower(name), furniture });
 }
 
+/*
+* Lower cases of all latters in a word
+*/
 string StringUtil::ToLower(const string& val)
 {
-    string upper = "";
+    string lower = "";
     for (unsigned int i = 0; i < val.size(); i++)
     {
-        upper += tolower(val[i]);
+        lower += tolower(val[i]);
     }
+    return lower;
+}
+
+/*
+* Upper the first case of a word
+*/
+string StringUtil::ToUpper(const string& val)
+{
+    string upper = val;
+    if (val.length() != 0) {
+        upper[0] = toupper(val[0]);
+    }
+
     return upper;
 }
 
-
+/*
+* Handle the user input on console
+*/
 bool Program::HandleUserInput(string userInput) {
     map_command.clear();
     bool status = false;
@@ -172,6 +202,9 @@ bool Program::HandleUserInput(string userInput) {
     return status;
 }
 
+/*
+* Normal explore the map state
+*/
 bool Program::NormalState(map<string, string> command) {
     for (auto itr = command.begin(); itr != command.end(); ++itr) {
         if (itr->first == "go") {
@@ -189,13 +222,16 @@ bool Program::NormalState(map<string, string> command) {
                 can_move = player->Go("east", rooms);
             }
             else {
-                cout << "Where do you want to go?" << endl;
+                cout << "\nWhere do you want to go?" << endl;
             }
             if (can_move) {
+                cout << endl;
+                cout << player->current_room->name << endl;
+                cout << player->current_room->description << endl;
                 Timer();
             }
             else {
-                cout << "Cant go there!" << endl;
+                cout << "\nCant go there!" << endl;
             }
             return true;
         }
@@ -232,7 +268,7 @@ bool Program::NormalState(map<string, string> command) {
             return true;
         }
         if (itr->first == "wait") {
-            cout << "You decide to wait some time" << endl;
+            cout << "\nYou decide to wait some time" << endl;
             Timer();
             return true;
         }
@@ -240,8 +276,8 @@ bool Program::NormalState(map<string, string> command) {
             m_done = true;
         }
         if (itr->first == "drop") {
-            if (player->items.find(itr->second) != player->items.end()) {
-                string new_location = player->Drop(player->items.find(itr->second)->second);
+            if (player->items.find(StringUtil::ToUpper(itr->second)) != player->items.end()) {
+                string new_location = player->Drop(player->items.find(StringUtil::ToUpper(itr->second))->second);
                 cout << "You are droping this in " << new_location << endl;
                 if (items.find(itr->second) != items.end()) {
                     items.find(itr->second)->second->location = new_location;
@@ -252,10 +288,50 @@ bool Program::NormalState(map<string, string> command) {
             }
             return true;
         }      
+        if (itr->first == "use") {
+            if (player->items.find(StringUtil::ToUpper(itr->second)) != player->items.end()) {
+                if (furnitures.find(StringUtil::ToLower(player->temporal_location)) != furnitures.end()) {
+                    int can_use = player->Use(player->items.find(StringUtil::ToUpper(itr->second))->second, furnitures.find(StringUtil::ToLower(player->temporal_location))->second);
+                    switch (can_use) {
+                        case 0:
+                            cout << "Cant use this item here!" << endl;
+                            break;
+                        case 1:
+                            cout << "You just want to watch the world Burn (MEME ENDING)" << endl;
+                            m_done = true;
+                            break;
+                        case 2:
+                            cout << "You start the car and leave that pleace" << endl;
+                            if (farmer->fake_ending) {
+                                cout << "but you commit a crime (BAD ENDING)" << endl;
+                            }
+                            else {
+                                cout << "no one was harm (GOOD ENDING)" << endl;
+                            }
+                            m_done = true;
+                            break;
+                    }
+                }
+                else {
+                    cout << "Cant use this item here!" << endl;
+                }
+            }
+            else {
+                cout << "You dont have that item" << endl;
+            }
+            return true;
+        }
+        else {
+            cout << "Thats not a command!" << endl;
+            return false;
+        }
         return false;
     }
 }
 
+/*
+* Dialogue state when the player encounters the farmer
+*/
 bool Program::DialogState(map<string, string> command) {
     for (auto itr = command.begin(); itr != command.end(); ++itr) {
         for (int i = 0; i <= farmer->current_choice->choices.size(); i++) {

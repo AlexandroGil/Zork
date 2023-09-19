@@ -28,7 +28,7 @@ public:
     ~Program();
     void CreateRoom(string name, string description, string north, string south, string east, string west);
     void CreateItem(string name, string description, string location);
-    void CreateFurniture(string name, string description, string location);
+    void CreateFurniture(string name, string description, string location, vector <string> usages);
     bool NormalState(map<string, string> command);
     bool DialogState(map<string, string> command);
     map<string, Room*> rooms;
@@ -59,6 +59,7 @@ class StringUtil
 {
 public:
     static string ToLower(const string& val);
+    static string ToUpper(const string& val);
 };
 
 
