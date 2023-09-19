@@ -25,11 +25,12 @@ Program::Program() {
     CreateFurniture("Toilet", "An old but really pretty fireplace, maybe you can light it", "BathRoom");
     CreateFurniture("Car", "An old but really pretty fireplace, maybe you can light it", "Garage");
 
-    CreateItem("Keys", "Looks like some old car keys", "Sink");
-    CreateItem("Axe", "Looks like some old car keys", "Garage");
-    CreateItem("Wood", "Looks like some old car keys", "Tree");
-    CreateItem("Picture", "Looks like some old car keys", "Couch");
-    CreateItem("Ring", "Looks like some old car keys", "Fireplace");
+    CreateItem("keys", "Looks like some old car keys", "Sink");
+    CreateItem("axe", "Looks like some old car keys", "Garage");
+    CreateItem("wood", "Looks like some old car keys", "Tree");
+    CreateItem("lighter", "Looks like some old car keys", "Nightstand");
+    CreateItem("picture", "Looks like some old car keys", "Couch");
+    CreateItem("ring", "Looks like some old car keys", "Fireplace");
 
     game_state = 0;
     farmer_home = false;
@@ -199,7 +200,7 @@ bool Program::NormalState(map<string, string> command) {
             return true;
         }
         else if (itr->first == "info") {
-            player->Info();
+            player->Info(furnitures, items);
             return true;
         }
         else if (itr->first == "inventory") {
@@ -238,6 +239,19 @@ bool Program::NormalState(map<string, string> command) {
         if (itr->first == "quit") {
             m_done = true;
         }
+        if (itr->first == "drop") {
+            if (player->items.find(itr->second) != player->items.end()) {
+                string new_location = player->Drop(player->items.find(itr->second)->second);
+                cout << "You are droping this in " << new_location << endl;
+                if (items.find(itr->second) != items.end()) {
+                    items.find(itr->second)->second->location = new_location;
+                }
+            }
+            else {
+                cout << "You dont have that item" << endl;
+            }
+            return true;
+        }      
         return false;
     }
 }
